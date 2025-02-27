@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: './backend/.env' });
 const express = require('express');
 const cors = require('cors');
 const gitScanner = require('./gitScanner');
@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// API to scan local repositories
+// ✅ API to scan local Git repositories
 app.get('/scan', async (req, res) => {
     try {
         const repos = await gitScanner.findGitRepos();
@@ -19,7 +19,7 @@ app.get('/scan', async (req, res) => {
     }
 });
 
-// API to get commit history
+// ✅ API to fetch commit history
 app.get('/commits', async (req, res) => {
     try {
         const commits = await gitScanner.getCommitHistory();
@@ -29,7 +29,7 @@ app.get('/commits', async (req, res) => {
     }
 });
 
-// API to generate AI-powered narrative
+// ✅ API to generate AI-powered coding journey narrative
 app.post('/narrative', async (req, res) => {
     try {
         const narrative = await aiNarrative.generateNarrative(req.body);
@@ -39,5 +39,6 @@ app.post('/narrative', async (req, res) => {
     }
 });
 
+// ✅ Start the server
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

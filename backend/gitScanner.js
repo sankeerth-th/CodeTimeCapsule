@@ -22,7 +22,7 @@ const findGitRepos = async () => {
     }
 
     scanDirectory(homeDir);
-    return repos;
+    return repos.length ? repos : ["/Users/your-username/Desktop/sample-repo"];
 };
 
 const getCommitHistory = async () => {
@@ -31,14 +31,20 @@ const getCommitHistory = async () => {
 
     for (let repo of repos) {
         const git = simpleGit(repo);
-        const log = await git.log();
+        const log = await git.log().catch(err => {
+            console.error(`Error fetching commits from ${repo}:`, err);
+            return { all: [] };
+        });
+
         commitData.push({
             repo,
-            commits: log.all.map(commit => ({
-                date: commit.date,
-                message: commit.message,
-                hash: commit.hash
-            }))
+            commits: log.all.length
+                ? log.all.map(commit => ({
+                      date: commit.date,
+                      message: commit.message,
+                      hash: commit.hash
+                  }))
+                : [{ date: new Date().toISOString(), message: "No commits found", hash: "0000" }]
         });
     }
     return commitData;
